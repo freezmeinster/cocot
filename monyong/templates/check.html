@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <style>
+            #myProgress {
+                width: 100%;
+                background-color: #e7e7e7;
+            }
+            #myBar {
+                width: 1%;
+                height: 30px;
+                background-color: green;
+            }
+        </style>
+    </head>
+    <body onload="move()">
+        <div id="myProgress">
+            <div id="myBar"></div>
+        </div>
+        <script>
+            var xhttp = new XMLHttpRequest();
+            
+            function check_progress(){
+                xhttp.open("GET", "/check-progress/{{ id }}", false);
+                xhttp.send();
+                return xhttp.responseText;
+            }
+            
+            function move() {
+                var elem = document.getElementById("myBar");
+                var width = 1;
+                var id = setInterval(frame, 1000);
+                function frame() {
+                    if (width >= 100) {
+                        clearInterval(id);
+                    } else {
+                        width = check_progress();
+                        elem.style.width = check_progress() + '%';
+                    }
+                }
+            } 
+        </script>
+    </body>
+</html>
