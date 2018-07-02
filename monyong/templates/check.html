@@ -8,25 +8,41 @@
             #myBar {
                 width: 1%;
                 height: 30px;
+                {% if task.state == "X" %}
+                background-color: red;
+                {% else %}
                 background-color: green;
+                {% endif %}
             }
         </style>
     </head>
     <body onload="move()">
+        <h1>{{ task.get_state_display }}</h1>
         <div id="myProgress">
             <div id="myBar"></div>
         </div>
+        <span id="log">{{ task.log|safe }}</span>
         <script>
+            
+            var last_line = {{ task.last_line_log|safe }};
             var xhttp = new XMLHttpRequest();
             
             function check_progress(){
-                xhttp.open("GET", "/check-progress/{{ id }}", false);
+                xhttp.open("GET", "/check-progress/{{ task.id }}", false);
                 xhttp.send();
                 return xhttp.responseText;
             }
             
+            function check_log(){
+                xhttp.open("GET", "/check-log/{{ task.id }}/"+last_line, false);
+                xhttp.send();
+                var myArr = JSON.parse(xhttp.responseText);
+                return myArr;
+            }
+            
             function move() {
                 var elem = document.getElementById("myBar");
+                var log = document.getElementById("log");
                 var width = 1;
                 var id = setInterval(frame, 1000);
                 function frame() {
@@ -35,6 +51,13 @@
                     } else {
                         width = check_progress();
                         elem.style.width = check_progress() + '%';
+                        var log_res = check_log();
+                        if (log_res.result != "<br/>" ){
+                            log.innerHTML += log_res.result;
+                            last_line = log_res.line;
+                        }
+                        
+                        
                     }
                 }
             } 

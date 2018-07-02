@@ -16,10 +16,12 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from monyong.views import task, check, check_progress
+from monyong.views import check_log
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', task, name='home'),
     url(r'^check/(?P<task_id>\d+)$', check, name='check'),
-    url(r'^check-progress/(?P<task_id>\d+)$', check_progress, name='check_progress')
+    url(r'^check-progress/(?P<task_id>\d+)$', check_progress, name='check_progress'),
+    url(r'^check-log/(?P<task_id>\d+)/(?P<pos>\d+)$', check_log, name='check_log')
 ]

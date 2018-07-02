@@ -13,6 +13,7 @@ class Task(models.Model):
     name = models.CharField(max_length=255)
     state = models.CharField(max_length=1, choices=STATE, default="S")
     progress = models.IntegerField(default=1)
+    last_line_log = models.IntegerField(default=0)
     log = models.TextField(blank=True)
 
     def __unicode__(self):
